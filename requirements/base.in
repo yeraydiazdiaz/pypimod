@@ -1,0 +1,7 @@
+httpx
+click
+beautifulsoup4
+lxml
+google-cloud-bigquery
+pendulum
+environ-config

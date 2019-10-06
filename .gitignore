@@ -1,0 +1,9 @@
+.python-version
+*.egg-info
+.mypy_cache
+**/__pycache__
+
+dev/
+.vscode
+*.code-workspace
+*service_account.json
