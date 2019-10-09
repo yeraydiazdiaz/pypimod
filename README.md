@@ -14,7 +14,7 @@ A tool for PyPI moderators to perform different tasks such as:
 - `--stats` will retrieve stats from BigQuery
 - `--days N` for the last N days, defaults to 31
 
-## `pypimod check <PROJECT>`
+## `pypimod check <PROJECT>` Not yet implemented
 
 - Download release (default to latest) to tmp dir
 - Perform checks on downloaded release
