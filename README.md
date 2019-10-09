@@ -7,21 +7,32 @@ A tool for PyPI moderators to perform different tasks such as:
 
 # CLI
 
-1. `pypimod info <PROJECT>`:
-    - links to standard + admin links for project and owner
-    - release information
-2. `pypimod stats <PROJECT>`:
-    - stats for a selected period of time
-3. `pypimod check <PROJECT>`:
-    - download release (default to latest) to tmp dir
-    - perform checks:
-        + line count
-        + installable?
+## `pypimod info <PROJECT>`
+
+- Links to standard + admin links for project and owner
+- Release information
+- `--stats` will retrieve stats from BigQuery
+- `--days N` for the last N days, defaults to 31
+
+## `pypimod check <PROJECT>`
+
+- Download release (default to latest) to tmp dir
+- Perform checks on downloaded release
 
 ## Status
 
 Very much alpha. Initially written as a helper tool for PEP 541 requests
 and created separately to Warehouse for quicker exploration.
+
+## BigQuery setup
+
+To retrieve stats from BigQuery you will need to setup a Google Cloud project
+and generate and download service account JSON. The service account must
+have the "BigQuery Job User IAM role".
+
+`pypimod` will cache results of queries in the `dev` directory to avoid
+incurring in excessive costs, you will need to manually remove these
+cached results files to refresh retrieval of statistics.
 
 ## Future ideas
 
