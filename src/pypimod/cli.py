@@ -24,8 +24,6 @@ def cli():
 @click.option("--stats/--no-stats", default=False, show_default=True)
 @click.option("-d", "--days", type=int, default=31, show_default=True)
 def info(project_name: str, stats: bool = False, days: int = 31):
-    # Generate PyPI URL and check if it returns 200 and warn otherwise
-    # Generate PyPI JSON API URLs, retrieve and gather information from them
     summary = pypi_api.get_project_summary(project_name)
     if stats:
         summary[
