@@ -1,12 +1,11 @@
 from pathlib import Path
-import typing
 import os
 
 import environ
+import envfiles
 
 HERE = Path(__file__).absolute()
 DEV_PATH = HERE.parents[2] / "dev"
-ENV_PATH = DEV_PATH / "local.env"
 
 
 @environ.config(prefix="PPM")
@@ -19,23 +18,11 @@ class Config:
     CACHED_RESULTS_PATH = environ.var(DEV_PATH / "cached_bq_results.json")
 
 
-def read_env_file(env_file_path: typing.Union[Path, str]) -> dict:
-    env = {}
-    with open(env_file_path) as fd:
-        for line in fd.readlines():
-            line = line.strip()
-            if line.startswith("#"):
-                continue
-            k, v = line.split("=", maxsplit=1)
-            # TODO: remove quotes on value
-            env[k] = v
-
-    return env
-
-
-env = None
-if ENV_PATH.exists():
-    env = read_env_file(ENV_PATH)
+env_file = os.getenv("ENV_FILE")
+if env_file:
+    env = envfiles.load(env_file)
     env.update(os.environ)
+else:
+    env = os.environ
 
 settings = environ.to_config(Config, env)
