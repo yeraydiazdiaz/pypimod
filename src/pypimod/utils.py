@@ -4,13 +4,13 @@ from pathlib import Path
 from pypimod.config import settings
 
 HERE = Path(__file__).absolute()
-DEV_PATH = HERE.parents[2] / "dev"
-CACHED_RESULTS_PATH = DEV_PATH / "cached_bq_results.json"
 
 
 def cache_results(func):
     """A very simple decorator to store and return cached results
     of generic functions based on arguments."""
+    if not settings.CACHE_RESULTS:
+        return func
 
     def wrapper(*args, **kwargs):
         filename = "_".join(

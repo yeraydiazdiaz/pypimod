@@ -1,0 +1,264 @@
+{
+    "info": {
+        "author": "Tom Christie",
+        "author_email": "tom@tomchristie.com",
+        "bugtrack_url": null,
+        "classifiers": [
+            "Development Status :: 3 - Alpha",
+            "Environment :: Web Environment",
+            "Framework :: AsyncIO",
+            "Framework :: Trio",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: BSD License",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.6",
+            "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
+            "Topic :: Internet :: WWW/HTTP"
+        ],
+        "description": "<p align=\"center\">\n  <a href=\"https://www.encode.io/httpx/\"><img width=\"350\" height=\"208\" src=\"https://raw.githubusercontent.com/encode/httpx/master/docs/img/logo.jpg\" alt='HTTPX'></a>\n</p>\n\n<p align=\"center\"><strong>HTTPX</strong> <em>- A next-generation HTTP client for Python.</em></p>\n\n<p align=\"center\">\n<a href=\"https://travis-ci.org/encode/httpx\">\n    <img src=\"https://travis-ci.org/encode/httpx.svg?branch=master\" alt=\"Build Status\">\n</a>\n<a href=\"https://codecov.io/gh/encode/httpx\">\n    <img src=\"https://codecov.io/gh/encode/httpx/branch/master/graph/badge.svg\" alt=\"Coverage\">\n</a>\n<a href=\"https://pypi.org/project/httpx/\">\n    <img src=\"https://badge.fury.io/py/httpx.svg\" alt=\"Package version\">\n</a>\n</p>\n\n**Note**: *This project should be considered as an \"alpha\" release. It is substantially API complete, but there are still some areas that need more work.*\n\n---\n\nLet's get started...\n\n```python\n>>> import httpx\n>>> r = httpx.get('https://www.example.org/')\n>>> r\n<Response [200 OK]>\n>>> r.status_code\n200\n>>> r.http_version\n'HTTP/1.1'\n>>> r.headers['content-type']\n'text/html; charset=UTF-8'\n>>> r.text\n'<!doctype html>\\n<html>\\n<head>\\n<title>Example Domain</title>...'\n```\n\n## Features\n\nHTTPX builds on the well-established usability of `requests`, and gives you:\n\n* A requests-compatible API.\n* HTTP/2 and HTTP/1.1 support.\n* Support for [issuing HTTP requests in parallel](https://www.encode.io/httpx/parallel/). *(Coming soon)*\n* Standard synchronous interface, but [with `async`/`await` support if you need it](https://www.encode.io/httpx/async/).\n* Ability to [make requests directly to WSGI or ASGI applications](https://www.encode.io/httpx/advanced/#calling-into-python-web-apps).\n* Strict timeouts everywhere.\n* Fully type annotated.\n* 100% test coverage.\n\nPlus all the standard features of `requests`...\n\n* International Domains and URLs\n* Keep-Alive & Connection Pooling\n* Sessions with Cookie Persistence\n* Browser-style SSL Verification\n* Basic/Digest Authentication\n* Elegant Key/Value Cookies\n* Automatic Decompression\n* Automatic Content Decoding\n* Unicode Response Bodies\n* Multipart File Uploads\n* HTTP(S) Proxy Support *(TODO)*\n* Connection Timeouts\n* Streaming Downloads\n* .netrc Support\n* Chunked Requests\n\n## Installation\n\nInstall with pip:\n\n```shell\n$ pip install httpx\n```\n\nhttpx requires Python 3.6+\n\n## Documentation\n\nProject documentation is available at [www.encode.io/httpx/](https://www.encode.io/httpx/).\n\nFor a run-through of all the basics, head over to the [QuickStart](https://www.encode.io/httpx/quickstart/).\n\nFor more advanced topics, see the [Advanced Usage](https://www.encode.io/httpx/advanced/) section, or\nthe specific topics on making [Parallel Requests](https://www.encode.io/httpx/parallel/) or using the\n[Async Client](https://www.encode.io/httpx/async/).\n\nThe [Developer Interface](https://www.encode.io/httpx/api/) provides a comprehensive API reference.\n\n## Contribute\n\nIf you want to contribute with HTTPX check out the [Contributing Guide](https://www.encode.io/httpx/contributing/) to learn how to start.\n\n## Dependencies\n\nThe httpx project relies on these excellent libraries:\n\n* `h2` - HTTP/2 support.\n* `h11` - HTTP/1.1 support.\n* `certifi` - SSL certificates.\n* `chardet` - Fallback auto-detection for response encoding.\n* `hstspreload` - determines whether IDNA-encoded host should be only accessed via HTTPS.\n* `idna` - Internationalized domain name support.\n* `rfc3986` - URL parsing & normalization.\n* `brotlipy` - Decoding for \"brotli\" compressed responses. *(Optional)*\n\nA huge amount of credit is due to `requests` for the API layout that\nmuch of this work follows, as well as to `urllib3` for plenty of design\ninspiration around the lower-level networking details.\n\n<p align=\"center\">&mdash; \u2b50\ufe0f &mdash;</p>\n<p align=\"center\"><i>HTTPX is <a href=\"https://github.com/encode/httpx/blob/master/LICENSE.md\">BSD licensed</a> code. Designed & built in Brighton, England.</i></p>\n\n\n# Changelog\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n\n## 0.7.5 (October 10, 2019)\n\n### Added\n\n- Allow lists of values to be passed to `params`. (Pull #386)\n- `ASGIDispatch`, `WSGIDispatch` are now available in the `httpx.dispatch` namespace. (Pull #407)\n- `HTTPError` is now available in the `httpx` namespace.  (Pull #421)\n- Add support for `start_tls()` to the Trio concurrency backend. (Pull #467)\n\n### Fixed\n\n- Username and password are no longer included in the `Host` header when basic authentication\n  credentials are supplied via the URL. (Pull #417)\n\n### Removed\n\n- The `.delete()` function no longer has `json`, `data`, or `files` parameters\n  to match the expected semantics of the `DELETE` method. (Pull #408)\n- Removed the `trio` extra. Trio support is detected automatically. (Pull #390)\n\n## 0.7.4 (September 25, 2019)\n\n### Added\n\n- Add Trio concurrency backend. (Pull #276)\n- Add `params` parameter to `Client` for setting default query parameters. (Pull #372)\n- Add support for `SSL_CERT_FILE` and `SSL_CERT_DIR` environment variables. (Pull #307)\n- Add debug logging to calls into ASGI apps. (Pull #371)\n- Add debug logging to SSL configuration. (Pull #378)\n\n### Fixed\n\n- Fix a bug when using `Client` without timeouts in Python 3.6. (Pull #383)\n- Propagate `Client` configuration to HTTP proxies. (Pull #377)\n\n## 0.7.3 (September 20, 2019)\n\n### Added\n\n- HTTP Proxy support. (Pulls #259, #353)\n- Add Digest authentication. (Pull #332)\n- Add `.build_request()` method to `Client` and `AsyncClient`. (Pull #319)\n- Add `.elapsed` property on responses. (Pull #351)\n- Add support for `SSLKEYLOGFILE` in Python 3.8b4+. (Pull #301)\n\n### Removed\n\n- Drop NPN support for HTTP version negotiation. (Pull #314)\n\n### Fixed\n\n- Fix distribution of type annotations for mypy (Pull #361).\n- Set `Host` header when redirecting cross-origin. (Pull #321)\n- Drop `Content-Length` headers on `GET` redirects. (Pull #310)\n- Raise `KeyError` if header isn't found in `Headers`. (Pull #324)\n- Raise `NotRedirectResponse` in `response.next()` if there is no redirection to perform. (Pull #297)\n- Fix bug in calculating the HTTP/2 maximum frame size. (Pull #153)\n\n## 0.7.2 (August 28, 2019)\n\n- Enforce using `httpx.AsyncioBackend` for the synchronous client. (Pull #232)\n- `httpx.ConnectionPool` will properly release a dropped connection. (Pull #230)\n- Remove the `raise_app_exceptions` argument from `Client`. (Pull #238)\n- `DecodeError` will no longer be raised for an empty body encoded with Brotli. (Pull #237)\n- Added `http_versions` parameter to `Client`. (Pull #250)\n- Only use HTTP/1.1 on short-lived connections like `httpx.get()`. (Pull #284)\n- Convert `Client.cookies` and `Client.headers` when set as a property. (Pull #274)\n- Setting `HTTPX_DEBUG=1` enables debug logging on all requests. (Pull #277)\n\n## 0.7.1 (August 18, 2019)\n\n- Include files with source distribution to be installable. (Pull #233)\n\n## 0.7.0 (August 17, 2019)\n\n- Add the `trust_env` property to `BaseClient`. (Pull #187)\n- Add the `links` property to `BaseResponse`. (Pull #211)\n- Accept `ssl.SSLContext` instances into `SSLConfig(verify=...)`. (Pull #215)\n- Add `Response.stream_text()` with incremental encoding detection. (Pull #183)\n- Properly updated the `Host` header when a redirect changes the origin. (Pull #199)\n- Ignore invalid `Content-Encoding` headers. (Pull #196)\n- Use `~/.netrc` and `~/_netrc` files by default when `trust_env=True`. (Pull #189)\n- Create exception base class `HTTPError` with `request` and `response` properties. (Pull #162)\n- Add HSTS preload list checking within `BaseClient` to upgrade HTTP URLs to HTTPS. (Pull #184)\n- Switch IDNA encoding from IDNA 2003 to IDNA 2008. (Pull #161)\n- Expose base classes for alternate concurrency backends. (Pull #178)\n- Improve Multipart parameter encoding. (Pull #167)\n- Add the `headers` proeprty to `BaseClient`. (Pull #159)\n- Add support for Google's `brotli` library. (Pull #156)\n- Remove deprecated TLS versions (TLSv1 and TLSv1.1) from default `SSLConfig`. (Pull #155)\n- Fix `URL.join(...)` to work similarly to RFC 3986 URL joining. (Pull #144)\n\n## 0.6.8 (July 25, 2019)\n\n- Check for disconnections when searching for an available\n  connection in `ConnectionPool.keepalive_connections` (Pull #145)\n- Allow string comparison for `URL` objects (Pull #139)\n- Add HTTP status codes 418 and 451 (Pull #135)\n- Add support for client certificate passwords (Pull #118)\n- Enable post-handshake client cert authentication for TLSv1.3 (Pull #118)\n- Disable using `commonName` for hostname checking for OpenSSL 1.1.0+ (Pull #118)\n- Detect encoding for `Response.json()` (Pull #116)\n\n## 0.6.7 (July 8, 2019)\n\n- Check for connection aliveness on re-acquiry (Pull #111)\n\n## 0.6.6 (July 3, 2019)\n\n- Improve `USER_AGENT` (Pull #110)\n- Add `Connection: keep-alive` by default to HTTP/1.1 connections. (Pull #110)\n\n## 0.6.5 (June 27, 2019)\n\n- Include `Host` header by default. (Pull #109)\n- Improve HTTP protocol detection. (Pull #107)\n\n## 0.6.4 (June 25, 2019)\n\n- Implement read and write timeouts (Pull #104)\n\n## 0.6.3 (June 24, 2019)\n\n- Handle early connection closes (Pull #103)\n\n## 0.6.2 (June 23, 2019)\n\n- Use urllib3's `DEFAULT_CIPHERS` for the `SSLConfig` object. (Pull #100)\n\n## 0.6.1 (June 21, 2019)\n\n- Add support for setting a `base_url` on the `Client`.\n\n## 0.6.0 (June 21, 2019)\n\n- Honor `local_flow_control_window` for HTTP/2 connections (Pull #98)\n\n\n",
+        "description_content_type": "text/markdown",
+        "docs_url": null,
+        "download_url": "",
+        "downloads": {
+            "last_day": -1,
+            "last_month": -1,
+            "last_week": -1
+        },
+        "home_page": "https://github.com/encode/httpx",
+        "keywords": "",
+        "license": "BSD",
+        "maintainer": "",
+        "maintainer_email": "",
+        "name": "httpx",
+        "package_url": "https://pypi.org/project/httpx/",
+        "platform": "",
+        "project_url": "https://pypi.org/project/httpx/",
+        "project_urls": {
+            "Homepage": "https://github.com/encode/httpx"
+        },
+        "release_url": "https://pypi.org/project/httpx/0.7.5/",
+        "requires_dist": [
+            "certifi",
+            "chardet (==3.*)",
+            "h11 (==0.8.*)",
+            "h2 (==3.*)",
+            "hstspreload (>=2019.8.27)",
+            "idna (==2.*)",
+            "rfc3986 (==1.*)"
+        ],
+        "requires_python": ">=3.6",
+        "summary": "The next generation HTTP client.",
+        "version": "0.7.5"
+    },
+    "last_serial": 5955087,
+    "releases": {
+        "0.0.1": [],
+        "0.6.7": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "6ce0dc80723cc00399f386205c9cec94",
+                    "sha256": "bd1a720859867904fc4b08f1125a7d5d49ba2541987706987ed1291ee41320e1"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.6.7.tar.gz",
+                "has_sig": false,
+                "md5_digest": "6ce0dc80723cc00399f386205c9cec94",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 35204,
+                "upload_time": "2019-07-19T14:23:35",
+                "url": "https://files.pythonhosted.org/packages/76/c2/2f21980db72ff2500238ced5f88c39d4328cf3de7b169d86e67b3a812fd8/httpx-0.6.7.tar.gz"
+            }
+        ],
+        "0.6.8": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "e576d9b9c93d7f1424ee224902457ca0",
+                    "sha256": "f1cea706e73e323f59d875d3585df0d1ff53bed8f394a7709eb64eb0b3ea504e"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.6.8.tar.gz",
+                "has_sig": false,
+                "md5_digest": "e576d9b9c93d7f1424ee224902457ca0",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 35408,
+                "upload_time": "2019-07-25T21:53:58",
+                "url": "https://files.pythonhosted.org/packages/cc/5d/aa4710437ec4b3cfc37b9e192d5f6002118832de0e3b8a8b28ca35207459/httpx-0.6.8.tar.gz"
+            }
+        ],
+        "0.7.0": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "46381d80b4147bdc704c440f7f1e9c44",
+                    "sha256": "e1cbdbdb0bc94a2f0b8384fd3cd9d8f50d66b9bba6ddae5f7455189c2f757c1d"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.0.tar.gz",
+                "has_sig": false,
+                "md5_digest": "46381d80b4147bdc704c440f7f1e9c44",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 41580,
+                "upload_time": "2019-08-17T20:15:27",
+                "url": "https://files.pythonhosted.org/packages/12/b3/fdd6e528a3385e2149ad42cc4e9b54e326d532e3e79a86e7cfdaea45723e/httpx-0.7.0.tar.gz"
+            }
+        ],
+        "0.7.1": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "69fef81968e807315ba6ee8223918005",
+                    "sha256": "e71d1d9d1cab974583b5f21481dee91cf2fce818915277dace581898406539c7"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.1.tar.gz",
+                "has_sig": false,
+                "md5_digest": "69fef81968e807315ba6ee8223918005",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 69263,
+                "upload_time": "2019-08-18T10:21:32",
+                "url": "https://files.pythonhosted.org/packages/05/8e/8e371d91bb908df80289121278c3ba7c6c6deb722b22e77ac043772746be/httpx-0.7.1.tar.gz"
+            }
+        ],
+        "0.7.2": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "e39cad82514eca6a0cf3fb4f6a69535a",
+                    "sha256": "3254b57b86ae01578a6cb86f976f596ad0bb766fdc8336629ed3c8a933bf7048"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.2.tar.gz",
+                "has_sig": false,
+                "md5_digest": "e39cad82514eca6a0cf3fb4f6a69535a",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 44703,
+                "upload_time": "2019-08-29T12:21:48",
+                "url": "https://files.pythonhosted.org/packages/d1/26/7f5925985754dadd8d58a0a6c64eb629a76979a03b8ff07269e8881b0ce7/httpx-0.7.2.tar.gz"
+            }
+        ],
+        "0.7.3": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "10b37ffa5142871c36c928983b1d8090",
+                    "sha256": "8f10e80c394ef7ced28dcefae659fa73f6b984d38db224ed8b5d63eb698bd925"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.3.tar.gz",
+                "has_sig": false,
+                "md5_digest": "10b37ffa5142871c36c928983b1d8090",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 52224,
+                "upload_time": "2019-09-20T19:06:58",
+                "url": "https://files.pythonhosted.org/packages/38/1e/28b6209d1be7109b08ebc02e7224c7f3c7d7706c0dd4563a2fedda4ad1b4/httpx-0.7.3.tar.gz"
+            }
+        ],
+        "0.7.4": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "0547b04dfc5e0671dcc40960aa075a1d",
+                    "sha256": "c1fd72b4bd73bf7c4b04e6a91b69c28dcaa1a21f994043722d7b7141b9162154"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.4.tar.gz",
+                "has_sig": false,
+                "md5_digest": "0547b04dfc5e0671dcc40960aa075a1d",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 57400,
+                "upload_time": "2019-09-26T11:51:08",
+                "url": "https://files.pythonhosted.org/packages/c9/f1/fdc9c48f22df5f87898826b7b1217a37e78cbccb3f1925f5d0fe28b0b4d4/httpx-0.7.4.tar.gz"
+            }
+        ],
+        "0.7.5": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "46ba3750c728f949db2c0f258b134a96",
+                    "sha256": "93df0398c61607020b042b4914f0e9d75d69ccdc172d8c545da7c56b116e49d0"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.5-py2.py3-none-any.whl",
+                "has_sig": false,
+                "md5_digest": "46ba3750c728f949db2c0f258b134a96",
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "requires_python": ">=3.6",
+                "size": 66095,
+                "upload_time": "2019-10-10T14:20:49",
+                "url": "https://files.pythonhosted.org/packages/dd/e8/2cff746cb4f384c1926b482036e2e3d146a49e3c0939de8d339ab656c4ff/httpx-0.7.5-py2.py3-none-any.whl"
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "f508b8c264da9ca3e91a3c9698e28c0e",
+                    "sha256": "f542c906e0fc604b9d03e0f498d478636ed51443e970b48e62883640e6d0e89b"
+                },
+                "downloads": -1,
+                "filename": "httpx-0.7.5.tar.gz",
+                "has_sig": false,
+                "md5_digest": "f508b8c264da9ca3e91a3c9698e28c0e",
+                "packagetype": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.6",
+                "size": 58783,
+                "upload_time": "2019-10-10T14:20:53",
+                "url": "https://files.pythonhosted.org/packages/b1/9d/5d75342eb53cebf8c0e511e298d78712e2e08f7e683b4a961c9fc5c28f80/httpx-0.7.5.tar.gz"
+            }
+        ]
+    },
+    "urls": [
+        {
+            "comment_text": "",
+            "digests": {
+                "md5": "46ba3750c728f949db2c0f258b134a96",
+                "sha256": "93df0398c61607020b042b4914f0e9d75d69ccdc172d8c545da7c56b116e49d0"
+            },
+            "downloads": -1,
+            "filename": "httpx-0.7.5-py2.py3-none-any.whl",
+            "has_sig": false,
+            "md5_digest": "46ba3750c728f949db2c0f258b134a96",
+            "packagetype": "bdist_wheel",
+            "python_version": "py2.py3",
+            "requires_python": ">=3.6",
+            "size": 66095,
+            "upload_time": "2019-10-10T14:20:49",
+            "url": "https://files.pythonhosted.org/packages/dd/e8/2cff746cb4f384c1926b482036e2e3d146a49e3c0939de8d339ab656c4ff/httpx-0.7.5-py2.py3-none-any.whl"
+        },
+        {
+            "comment_text": "",
+            "digests": {
+                "md5": "f508b8c264da9ca3e91a3c9698e28c0e",
+                "sha256": "f542c906e0fc604b9d03e0f498d478636ed51443e970b48e62883640e6d0e89b"
+            },
+            "downloads": -1,
+            "filename": "httpx-0.7.5.tar.gz",
+            "has_sig": false,
+            "md5_digest": "f508b8c264da9ca3e91a3c9698e28c0e",
+            "packagetype": "sdist",
+            "python_version": "source",
+            "requires_python": ">=3.6",
+            "size": 58783,
+            "upload_time": "2019-10-10T14:20:53",
+            "url": "https://files.pythonhosted.org/packages/b1/9d/5d75342eb53cebf8c0e511e298d78712e2e08f7e683b4a961c9fc5c28f80/httpx-0.7.5.tar.gz"
+        }
+    ]
+}
