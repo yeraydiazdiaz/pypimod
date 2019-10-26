@@ -17,6 +17,20 @@ def read(*parts):
         return f.read()
 
 
+def read_requirements_file(*parts):
+    return [
+        parse_requirement_line(line)
+        for line in read(*parts).strip().split("\n")
+        if line and not line.startswith("#")
+    ]
+
+
+def parse_requirement_line(line):
+    if line.startswith("git+https"):
+        return line[line.find("#egg=") + 5 :]
+    return line[: line.find(" ")] if " " in line else line
+
+
 def find_meta(meta):
     """
     Extract __*meta*__ from META_FILE.
@@ -46,14 +60,8 @@ CLASSIFIERS = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-INSTALL_REQUIRES = (
-    read(os.path.join(HERE, "requirements", "base.txt")).strip().split("\n")
-)
-EXTRAS_REQUIRE = {
-    "tests": read(os.path.join(HERE, "requirements", "test.txt"))
-    .strip()
-    .split("\n")[1:]
-}
+INSTALL_REQUIRES = read_requirements_file("requirements", "main.txt")
+EXTRAS_REQUIRE = {"tests": read_requirements_file("requirements", "test.txt")[1:]}
 EXTRAS_REQUIRE["dev"] = EXTRAS_REQUIRE["tests"]
 VERSION = find_meta("version")
 URL = find_meta("url")

@@ -2,7 +2,9 @@ import logging
 
 import click
 
+from pypimod import server
 from pypimod.sources import pypi_api, bigquery
+from pypimod.config import settings
 
 
 logging.basicConfig(
@@ -24,6 +26,7 @@ def cli():
 @click.option("--stats/--no-stats", default=False, show_default=True)
 @click.option("-d", "--days", type=int, default=31, show_default=True)
 def info(project_name: str, stats: bool = False, days: int = 31):
+    """Retrieve project data from PyPI and print a summary."""
     summary = pypi_api.get_project_summary(project_name)
     if stats:
         summary[
@@ -35,6 +38,16 @@ def info(project_name: str, stats: bool = False, days: int = 31):
 
 @cli.command()
 def check(project_name: str):
-    # Download release to temporary directory and perform analysis for
-    # empty packages
+    """Download release to temporary directory and perform analysis."""
     raise NotImplementedError
+
+
+@cli.command()
+@click.option("-h", "--host", type=str)
+@click.option("-p", "--port", type=int)
+@click.option("--debug/--no-debug", default=False, show_default=True)
+def serve(host: str = None, port: int = None, debug: bool = False) -> None:
+    """Start the GitHub bot server."""
+    host = host or settings.SERVER_HOST
+    port = port or settings.SERVER_PORT
+    server.app.run(host, port=port, debug=debug)

@@ -1,9 +1,14 @@
+from unittest.mock import AsyncMock
+
 import json
 from pathlib import Path
 
+from gidgethub.abc import GitHubAPI
 from google.cloud import bigquery
 
 import pytest
+
+from pypimod import server
 
 
 def _read_asset(name):
@@ -24,3 +29,16 @@ def bq_client(mocker):
         "pypimod.sources.bigquery.get_bigquery_client", return_value=mock_bq_client
     )
     return mock_bq_client
+
+
+@pytest.fixture
+def app():
+    return server.app
+
+
+@pytest.fixture
+def gh(mocker):
+    """A mock gidgethub.GitHubAPI."""
+    mock = AsyncMock(spec=GitHubAPI)
+    mocker.patch("pypimod.server.gh_aiohttp.GitHubAPI", return_value=mock)
+    return mock

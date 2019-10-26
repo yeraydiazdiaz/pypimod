@@ -2,6 +2,8 @@
 *.egg-info
 .mypy_cache
 **/__pycache__
+.coverage
+env/local.env
 
 dev/
 .vscode

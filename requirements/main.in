@@ -1,8 +1,8 @@
 httpx
 click
-beautifulsoup4
-lxml
+gidgethub[aiohttp]
 google-cloud-bigquery
 pendulum
 environ-config
 envfiles
+quart
