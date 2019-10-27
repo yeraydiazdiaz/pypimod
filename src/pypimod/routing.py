@@ -16,7 +16,6 @@ PEP541_LABEL = "PEP 541"
 @router.register("issues", action="opened")
 @router.register("issues", action="edited")
 async def pep541_issue_opened(event: Event, gh: GitHubAPI, *args, **kwargs) -> None:
-    print(event)
     issue = event.data["issue"]
     if PEP541_RE.match(issue["title"]) and not is_issue_labeled_with_pep541(issue):
         await github.add_pep541_label(gh, issue, PEP541_LABEL)
