@@ -17,12 +17,40 @@ class Config:
     CACHE_RESULTS: bool = environ.bool_var(True)
     CACHED_RESULTS_PATH: str = environ.var(DEV_PATH / "cached_bq_results.json")
 
-    SERVER_HOST: str = environ.var("0.0.0.0", name="HOST")
-    SERVER_PORT: int = environ.var(8080, converter=int, name="PORT")
+    SERVER_HOST: str = environ.var("0.0.0.0")
+    SERVER_PORT: int = environ.var(8080, converter=int)
 
     GITHUB_SECRET: str = environ.var()
     GITHUB_AUTH: str = environ.var()
     GITHUB_REPO: str = environ.var("yeraydiazdiaz/pypimod")
+
+    LOGGING_LEVEL: str = environ.var("INFO")
+
+    @property
+    def LOGGING(self):
+        return {
+            "version": 1,
+            "formatters": {
+                "default": {
+                    "format": "[%(asctime)s][%(name)s][%(levelname)s]: %(message)s",
+                    "datefmt": "%Y-%m-%d %H:%M:%S",
+                }
+            },
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "level": self.LOGGING_LEVEL,
+                    "formatter": "default",
+                }
+            },
+            "loggers": {
+                "": {
+                    "handlers": ["console"],
+                    "level": self.LOGGING_LEVEL,
+                    "propagate": True,
+                }
+            },
+        }
 
 
 env_file = os.getenv("ENV_FILE")

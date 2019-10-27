@@ -1,5 +1,4 @@
 import asyncio
-import traceback
 
 import aiohttp
 
@@ -8,17 +7,18 @@ from gidgethub import routing, sansio
 from quart import Quart, request
 
 from pypimod.config import settings
-from pypimod import routing as pypimod_routing
-
+from pypimod import routing as pypimod_routing, logging
 
 app = Quart(__name__)
 
 router = routing.Router(pypimod_routing.router)
 
+logger = logging.getLogger(__name__)
+
 
 @app.errorhandler(500)
 def error_handler(exc):
-    traceback.print_tb(exc.__traceback__)
+    logger.exception(exc)
     return "Error", 500
 
 

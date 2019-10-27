@@ -1,1 +1,1 @@
-web: python3 -m pypimod.server
+web: pypimod serve --port $PORT
