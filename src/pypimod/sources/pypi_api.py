@@ -10,7 +10,7 @@ PYPI_BASE_URL = "https://pypi.org"
 def get_project_summary(project_name: str) -> dict:
     """Returns a summary of project data from the PyPI API for a project."""
     project_data = get_project_data_by_name(project_name)
-    return {
+    summary = {
         "name": project_name,
         "summary": project_data["info"]["summary"],
         "version": project_data["info"]["version"],
@@ -19,6 +19,10 @@ def get_project_summary(project_name: str) -> dict:
         "project_url": project_data["info"]["project_url"],
         "release_url": project_data["info"]["release_url"],
     }
+    summary["last_release_datetime"] = project_data["releases"][summary["version"]][0][
+        "upload_time"
+    ]
+    return summary
 
 
 # TODO: add retries

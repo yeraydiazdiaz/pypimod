@@ -18,3 +18,4 @@ def test_pypi_api(mocker, pypi_api_httpx):
     assert summary["author_email"] == pypi_api_httpx["info"]["author_email"]
     assert summary["project_url"] == pypi_api_httpx["info"]["project_url"]
     assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
+    assert summary["last_release_datetime"] == "2019-10-10T14:20:49"

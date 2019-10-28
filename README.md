@@ -9,10 +9,31 @@ A tool for PyPI moderators to perform different tasks such as:
 
 ## `pypimod info <PROJECT>`
 
-- Links to standard + admin links for project and owner
-- Release information
+Display project information for a project name.
+
 - `--stats` will retrieve stats from BigQuery
 - `--days N` for the last N days, defaults to 31
+
+```
+$ pypimod info lunr
+name: lunr
+summary: A Python implementation of Lunr.js
+version: 0.5.5
+author: Yeray Diaz Diaz
+author_email: yeraydiazdiaz@gmail.com
+project_url: https://pypi.org/project/lunr/
+release_url: https://pypi.org/project/lunr/0.5.5/
+last_release_datetime: 2019-04-28T15:25:03
+```
+
+## `pypimod serve`
+
+Start a GitHub bot server. The server will listen by default on port 8080
+and will respond to webhook requests from GitHub as part of the
+[`pypimod` app](https://github.com/apps/pypimod).
+
+When PEP 541 issues are created the bot will apply the correct label and
+post a comment with information about the project.
 
 ## `pypimod check <PROJECT>` Not yet implemented
 
