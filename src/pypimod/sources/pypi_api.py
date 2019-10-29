@@ -1,8 +1,8 @@
+from typing import Optional
 from urllib.parse import urljoin
 
-from typing import Optional
-
 import httpx
+import pendulum
 
 PYPI_BASE_URL = "https://pypi.org"
 
@@ -22,6 +22,9 @@ def get_project_summary(project_name: str) -> dict:
     summary["last_release_datetime"] = project_data["releases"][summary["version"]][0][
         "upload_time"
     ]
+    summary["last_release_elapsed_time"] = (
+        pendulum.now() - pendulum.parse(summary["last_release_datetime"])
+    ).in_words()
     return summary
 
 

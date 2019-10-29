@@ -1,3 +1,4 @@
+import pendulum
 import pytest
 
 from pypimod.sources import pypi_api
@@ -19,3 +20,9 @@ def test_pypi_api(mocker, pypi_api_httpx):
     assert summary["project_url"] == pypi_api_httpx["info"]["project_url"]
     assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
     assert summary["last_release_datetime"] == "2019-10-10T14:20:49"
+    assert (
+        summary["last_release_elapsed_time"]
+        == (
+            pendulum.now() - pendulum.parse(summary["last_release_datetime"])
+        ).in_words()
+    )
