@@ -5,6 +5,7 @@ from gidgethub.sansio import Event
 from gidgethub.abc import GitHubAPI
 
 from pypimod import github
+from pypimod.sources import pypi_api
 
 router = gidgethub.routing.Router()
 
