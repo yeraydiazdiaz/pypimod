@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 from urllib.parse import urljoin
 
@@ -7,11 +8,16 @@ import pendulum
 PYPI_BASE_URL = "https://pypi.org"
 
 
-def get_project_summary(project_name: str) -> dict:
+def get_project_summary(project_name: str):
+    # TODO: add an async version? Feels wrong somehow...
+    project_data = asyncio.run(get_project_data_by_name(project_name))
+    return get_project_summary_from_project_data(project_data)
+
+
+def get_project_summary_from_project_data(project_data: dict) -> dict:
     """Returns a summary of project data from the PyPI API for a project."""
-    project_data = get_project_data_by_name(project_name)
     summary = {
-        "name": project_name,
+        "name": project_data["info"]["name"],
         "summary": project_data["info"]["summary"],
         "version": project_data["info"]["version"],
         "author": project_data["info"]["author"],
@@ -29,11 +35,20 @@ def get_project_summary(project_name: str) -> dict:
 
 
 # TODO: add retries
-def get_project_data_by_name(
-    project_name: str, client: Optional[httpx.Client] = None
+async def get_project_data_by_name(
+    project_name: str, client: Optional[httpx.AsyncClient] = None
 ) -> dict:
-    client = client or httpx.Client()
-    response = client.get(
+    if not client:
+        async with httpx.AsyncClient() as client:
+            return await _get_pypi_api_project_data(project_name, client)
+    else:
+        return await _get_pypi_api_project_data(project_name, client)
+
+
+async def _get_pypi_api_project_data(
+    project_name: str, client: httpx.AsyncClient
+) -> dict:
+    response = await client.get(
         urljoin(PYPI_BASE_URL, "/".join(("pypi", project_name, "json")))
     )
     # TODO: handle connection errors

@@ -21,7 +21,8 @@ async def add_pep541_label(gh: GitHubAPI, issue: dict, label: str) -> None:
 async def add_comment_with_project_info(
     gh: GitHubAPI, issue: dict, project_name: str
 ) -> None:
-    summary = pypi_api.get_project_summary(project_name)
+    project_data = await pypi_api.get_project_data_by_name(project_name)
+    summary = pypi_api.get_project_summary_from_project_data(project_data)
     text = "Here is the relevant information from the PyPI JSON API for project {}:\n".format(
         project_name
     )
