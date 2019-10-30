@@ -22,7 +22,5 @@ def test_pypi_api(mocker, pypi_api_httpx):
     assert summary["last_release_datetime"] == "2019-10-10T14:20:49"
     assert (
         summary["last_release_elapsed_time"]
-        == (
-            pendulum.now() - pendulum.parse(summary["last_release_datetime"])
-        ).in_words()
+        == pendulum.parse(summary["last_release_datetime"]).diff_for_humans()
     )

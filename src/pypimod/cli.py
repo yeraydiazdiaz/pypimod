@@ -1,6 +1,8 @@
 import logging
 
 import click
+import pendulum
+import jwt
 
 from pypimod import server
 from pypimod.sources import pypi_api, bigquery
@@ -51,3 +53,22 @@ def serve(host: str = None, port: int = None, debug: bool = False) -> None:
     host = host or settings.SERVER_HOST
     port = port or settings.SERVER_PORT
     server.app.run(host, port=port, debug=debug)
+
+
+@cli.command()
+@click.argument("key")
+def generate_jwt(key: str) -> None:
+    # Private key contents
+    with open(key) as fd:
+        private_pem = fd.read()
+    now = pendulum.now()
+    payload = {
+        # issued at time
+        "iat": int(now.timestamp()),
+        # JWT expiration time (10 minute maximum)
+        "exp": int(now.add(minutes=10).timestamp()),  # rotate?
+        # GitHub App's identifier
+        "iss": settings.GITHUB_APP_ID,
+    }
+    encoded = jwt.encode(payload, private_pem, algorithm="RS256")
+    click.echo(encoded)

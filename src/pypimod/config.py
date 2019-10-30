@@ -23,6 +23,7 @@ class Config:
     GITHUB_SECRET: str = environ.var()
     GITHUB_AUTH: str = environ.var()
     GITHUB_REPO: str = environ.var("yeraydiazdiaz/pypimod")
+    GITHUB_APP_ID: str = environ.var("44773")
 
     LOGGING_LEVEL: str = environ.var("INFO")
 

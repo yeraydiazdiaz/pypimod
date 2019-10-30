@@ -6,3 +6,5 @@ pendulum
 environ-config
 envfiles
 quart
+PyJWT
+cryptography

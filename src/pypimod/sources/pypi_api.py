@@ -28,9 +28,9 @@ def get_project_summary_from_project_data(project_data: dict) -> dict:
     summary["last_release_datetime"] = project_data["releases"][summary["version"]][0][
         "upload_time"
     ]
-    summary["last_release_elapsed_time"] = (
-        pendulum.now() - pendulum.parse(summary["last_release_datetime"])
-    ).in_words()
+    summary["last_release_elapsed_time"] = pendulum.parse(
+        summary["last_release_datetime"]
+    ).diff_for_humans()
     return summary
 
 

@@ -86,7 +86,8 @@ async def test_server_does_not_overwrite_existing_labels(mocker, app, gh) -> Non
 @pytest.mark.wip
 @pytest.mark.asyncio
 async def test_server_comments_on_issue_with_pypi_api_stats(mocker, app, gh) -> None:
-    mocker.patch("pypimod.github.pypi_api.get_project_summary")
+    mocker.patch("pypimod.github.pypi_api.get_project_data_by_name")
+    mocker.patch("pypimod.github.pypi_api.get_project_summary_from_project_data")
     client = app.test_client()
     data = {
         "issue": {"title": "PEP 541: transfer of project `foobar`", "number": 1234},
