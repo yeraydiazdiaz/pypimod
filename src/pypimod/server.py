@@ -1,13 +1,12 @@
 import asyncio
 
-import aiohttp
+import httpx
 
-from gidgethub import aiohttp as gh_aiohttp
 from gidgethub import routing, sansio
 from quart import Quart, request
 
 from pypimod.config import settings
-from pypimod import routing as pypimod_routing, logging
+from pypimod import routing as pypimod_routing, logging, github
 
 app = Quart(__name__)
 
@@ -27,13 +26,11 @@ async def main():
     body = await request.get_data()
     event = sansio.Event.from_http(request.headers, body, secret=settings.GITHUB_SECRET)
     if event.event != "ping":
-        async with aiohttp.ClientSession() as session:
+        async with httpx.AsyncClient() as client:
             # TODO: add caching
-            gh = gh_aiohttp.GitHubAPI(
-                session, "yeraydiazdiaz/pypimod", oauth_token=settings.GITHUB_AUTH
-            )
+            gh = github.InstallationBasedAppGitHubAPI(client, "yeraydiazdiaz/pypimod")
             await asyncio.sleep(1)  # give GitHub time to reach consistency
-            await router.dispatch(event, gh, session=session)
+            await router.dispatch(event, gh, client=client)
 
     return ""
 

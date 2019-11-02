@@ -21,9 +21,14 @@ class Config:
     SERVER_PORT: int = environ.var(8080, converter=int)
 
     GITHUB_SECRET: str = environ.var()
-    GITHUB_AUTH: str = environ.var()
-    GITHUB_REPO: str = environ.var("yeraydiazdiaz/pypimod")
-    GITHUB_APP_ID: str = environ.var("44773")
+    GITHUB_KEY: str = environ.var()
+    GITHUB_OWNER: str = environ.var("yeraydiazdiaz")
+    GITHUB_REPO: str = environ.var("pypimod")
+    GITHUB_APP_ID: int = environ.var(44773, converter=int)
+
+    @property
+    def GITHUB_REPO_PATH(self):
+        return "/".join((self.GITHUB_OWNER, self.GITHUB_REPO))
 
     LOGGING_LEVEL: str = environ.var("INFO")
 

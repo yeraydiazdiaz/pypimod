@@ -5,19 +5,17 @@
 #    pip-compile --build-isolation --output-file=requirements/main.txt requirements/main.in
 #
 aiofiles==0.4.0           # via quart
-aiohttp==3.6.2            # via gidgethub
-async-timeout==3.0.1      # via aiohttp
-attrs==19.2.0             # via aiohttp, environ-config
+attrs==19.2.0             # via environ-config
 blinker==1.4              # via quart
 cachetools==3.1.1         # via google-auth
 certifi==2019.6.16        # via httpx, requests
 cffi==1.13.1              # via cryptography
-chardet==3.0.4            # via aiohttp, httpx, requests
+chardet==3.0.4            # via httpx, requests
 click==7.0
 cryptography==2.8
 envfiles==0.1.0
 environ-config==19.1.0
-gidgethub[aiohttp]==3.1.0
+gidgethub[httpx]==3.2.0
 google-api-core==1.13.0   # via google-cloud-core
 google-auth==1.6.3        # via google-api-core
 google-cloud-bigquery==1.15.0
@@ -31,11 +29,11 @@ hstspreload==2019.9.30    # via httpx
 httpx==0.7.4
 hypercorn==0.9.0          # via quart
 hyperframe==5.2.0         # via h2
-idna==2.8                 # via httpx, requests, yarl
+idna==2.8                 # via httpx, requests
 itsdangerous==1.1.0       # via quart
 jinja2==2.10.3            # via quart
 markupsafe==1.1.1         # via jinja2
-multidict==4.5.2          # via aiohttp, quart, yarl
+multidict==4.5.2          # via quart
 pendulum==2.0.4
 priority==1.3.0           # via hypercorn
 protobuf==3.8.0           # via google-api-core, google-cloud-bigquery, googleapis-common-protos
@@ -57,7 +55,6 @@ typing-extensions==3.7.4  # via hypercorn
 uritemplate==3.0.0        # via gidgethub
 urllib3==1.25.3           # via requests
 wsproto==0.15.0           # via hypercorn
-yarl==1.3.0               # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools==41.6.0        # via google-api-core, protobuf

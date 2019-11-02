@@ -1,6 +1,6 @@
 httpx
 click
-gidgethub[aiohttp]
+gidgethub[httpx]>=3.2.0
 google-cloud-bigquery
 pendulum
 environ-config
