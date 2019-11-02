@@ -83,7 +83,6 @@ async def test_server_does_not_overwrite_existing_labels(mocker, app, gh) -> Non
     ]
 
 
-@pytest.mark.wip
 @pytest.mark.asyncio
 async def test_server_comments_on_issue_with_pypi_api_stats(mocker, app, gh) -> None:
     mocker.patch("pypimod.github.pypi_api.get_project_data_by_name")

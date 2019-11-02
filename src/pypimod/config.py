@@ -10,18 +10,8 @@ DEV_PATH = HERE.parents[2] / "dev"
 
 @environ.config(prefix="PPM")
 class Config:
-    GC_CREDENTIALS: str = environ.var()
-    GC_PROJECT: str = environ.var()
-
-    BQ_PYPI_DOWNLOADS_TABLE: str = environ.var("the-psf.pypi.downloads*")
-    CACHE_RESULTS: bool = environ.bool_var(True)
-    CACHED_RESULTS_PATH: str = environ.var(DEV_PATH / "cached_bq_results.json")
-
-    SERVER_HOST: str = environ.var("0.0.0.0")
-    SERVER_PORT: int = environ.var(8080, converter=int)
-
-    GITHUB_SECRET: str = environ.var()
-    GITHUB_KEY: str = environ.var()
+    GITHUB_SECRET: str = environ.var()  # App secret used to verify events
+    GITHUB_KEY: str = environ.var()  # B64 encoded private key to encrypt JWT
     GITHUB_OWNER: str = environ.var("yeraydiazdiaz")
     GITHUB_REPO: str = environ.var("pypimod")
     GITHUB_APP_ID: int = environ.var(44773, converter=int)
@@ -29,6 +19,15 @@ class Config:
     @property
     def GITHUB_REPO_PATH(self):
         return "/".join((self.GITHUB_OWNER, self.GITHUB_REPO))
+
+    GC_CREDENTIALS: str = environ.var()  # Path to Google JSON credentials
+    GC_PROJECT: str = environ.var()
+    BQ_PYPI_DOWNLOADS_TABLE: str = environ.var("the-psf.pypi.downloads*")
+    CACHE_RESULTS: bool = environ.bool_var(True)
+    CACHED_RESULTS_PATH: str = environ.var(DEV_PATH / "cached_bq_results.json")
+
+    SERVER_HOST: str = environ.var("0.0.0.0")
+    SERVER_PORT: int = environ.var(8080, converter=int)
 
     LOGGING_LEVEL: str = environ.var("INFO")
 

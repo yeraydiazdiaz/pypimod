@@ -40,5 +40,5 @@ def app():
 def gh(mocker):
     """A mock gidgethub.GitHubAPI."""
     mock = AsyncMock(spec=GitHubAPI)
-    mocker.patch("pypimod.server.gh_aiohttp.GitHubAPI", return_value=mock)
+    mocker.patch("pypimod.github.InstallationBasedAppGitHubAPI", return_value=mock)
     return mock

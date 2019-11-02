@@ -45,7 +45,7 @@ class InstallationBasedAppGitHubAPI(gh_httpx.GitHubAPI):
     ) -> Tuple[bytes, Opt[str]]:
         # TODO: we're wasting a round trip here because we reuse this instance
         # to bootstrap the refreshing of the token. Feels like this should
-        # not be a subclass but a wrapper.
+        # not be a subclass but a wrapper but will do for now.
         try:
             self.attempts += 1
             return await super()._make_request(
@@ -102,7 +102,7 @@ class InstallationBasedAppGitHubAPI(gh_httpx.GitHubAPI):
 
 def encrypt_jwt(key: bytes = None) -> bytes:
     key = key or base64.b64decode(settings.GITHUB_KEY)
-    now = pendulum.now().subtract(seconds=2)
+    now = pendulum.now()
     payload = {
         "iat": int(now.timestamp()),  # issued at time
         "exp": int(
