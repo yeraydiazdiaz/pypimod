@@ -1,3 +1,5 @@
+from unittest.mock import AsyncMock
+
 import pytest
 
 
@@ -85,8 +87,10 @@ async def test_server_does_not_overwrite_existing_labels(mocker, app, gh) -> Non
 
 @pytest.mark.asyncio
 async def test_server_comments_on_issue_with_pypi_api_stats(mocker, app, gh) -> None:
-    mocker.patch("pypimod.github.pypi_api.get_project_data_by_name")
-    mocker.patch("pypimod.github.pypi_api.get_project_summary_from_project_data")
+    mocker.patch(
+        "pypimod.github.pypi_api.get_project_summary",
+        return_value={"project_name": "lunr"},
+    )
     client = app.test_client()
     data = {
         "issue": {"title": "PEP 541: transfer of project `foobar`", "number": 1234},
@@ -102,3 +106,4 @@ async def test_server_comments_on_issue_with_pypi_api_stats(mocker, app, gh) -> 
 
     assert response.status_code == 200
     assert gh.post.await_count == 1
+    assert "lunr" in gh.post.await_args[1]["data"]["body"]

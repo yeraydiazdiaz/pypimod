@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import logging
 
@@ -6,7 +7,6 @@ import click
 from pypimod import server
 from pypimod.sources import pypi_api, bigquery
 from pypimod.config import settings
-from pypimod import github
 
 
 logging.basicConfig(
@@ -29,7 +29,7 @@ def cli():
 @click.option("-d", "--days", type=int, default=31, show_default=True)
 def info(project_name: str, stats: bool = False, days: int = 31):
     """Retrieve project data from PyPI and print a summary."""
-    summary = pypi_api.get_project_summary(project_name)
+    summary = asyncio.run(pypi_api.get_project_summary(project_name))
     if stats:
         summary[
             f"downloads_last_{days}_days"
