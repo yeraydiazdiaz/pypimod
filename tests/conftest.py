@@ -1,12 +1,13 @@
+import json
+
+from pathlib import Path
 from unittest.mock import AsyncMock
 
-import json
-from pathlib import Path
+import pytest
+import trustme
 
 from gidgethub.abc import GitHubAPI
 from google.cloud import bigquery
-
-import pytest
 
 from pypimod import server
 
@@ -42,3 +43,13 @@ def gh(mocker):
     mock = AsyncMock(spec=GitHubAPI)
     mocker.patch("pypimod.github.InstallationBasedAppGitHubAPI", return_value=mock)
     return mock
+
+
+@pytest.fixture(scope="session")
+def cert_authority():
+    return trustme.CA()
+
+
+@pytest.fixture(scope="session")
+def ca_cert_pem(cert_authority):
+    return cert_authority.private_key_pem.bytes()

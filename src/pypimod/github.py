@@ -53,7 +53,7 @@ class InstallationBasedAppGitHubAPI(gh_httpx.GitHubAPI):
 
     def __init__(self, client: httpx.AsyncClient, *args: Any, **kwargs: Any) -> None:
         super().__init__(client, *args, **kwargs)
-        self.attempts = 0
+        self.errors = 0
         self._jwt = None
         self._installation_token = None
 
@@ -71,12 +71,12 @@ class InstallationBasedAppGitHubAPI(gh_httpx.GitHubAPI):
         # to bootstrap the refreshing of the token. Feels like this should
         # not be a subclass but a wrapper but will do for now.
         try:
-            self.attempts += 1
             return await super()._make_request(
                 method, url, url_vars, data, accept, jwt=jwt, oauth_token=oauth_token
             )
         except BadRequest:
-            if self.attempts == self.MAX_RETRIES:
+            self.errors += 1
+            if self.errors == self.MAX_RETRIES:
                 logger.error(
                     "Regenerating installation tokens failed %d times, giving up",
                     self.MAX_RETRIES,
