@@ -4,7 +4,7 @@ from typing import Any, Dict
 from typing import Optional as Opt
 from typing import Tuple
 
-import aiohttp
+import httpx
 import jwt
 import pendulum
 
@@ -51,10 +51,8 @@ class InstallationBasedAppGitHubAPI(gh_httpx.GitHubAPI):
 
     MAX_RETRIES = 3
 
-    def __init__(
-        self, session: aiohttp.ClientSession, *args: Any, **kwargs: Any
-    ) -> None:
-        super().__init__(session, *args, **kwargs)
+    def __init__(self, client: httpx.AsyncClient, *args: Any, **kwargs: Any) -> None:
+        super().__init__(client, *args, **kwargs)
         self.attempts = 0
         self._jwt = None
         self._installation_token = None
