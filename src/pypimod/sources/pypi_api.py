@@ -44,7 +44,6 @@ def get_project_summary_from_project_data(project_data: dict) -> dict:
         "summary": project_data["info"]["summary"],
         "version": project_data["info"]["version"],
         "author": project_data["info"]["author"],
-        "author_email": project_data["info"]["author_email"],
         "project_url": project_data["info"]["project_url"],
         "release_url": project_data["info"]["release_url"],
     }
