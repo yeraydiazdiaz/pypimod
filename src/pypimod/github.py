@@ -34,13 +34,20 @@ async def add_pep541_label(gh: GitHubAPI, issue: dict, label: str) -> None:
 async def add_comment_with_project_info(
     gh: GitHubAPI, issue: dict, project_name: str
 ) -> None:
-    summary = await pypi_api.get_project_summary(project_name)
-    text = "Here is the relevant information from the PyPI JSON API for project {}:\n".format(
-        project_name
-    )
-    for key, value in summary.items():
-        humanized_key = key.replace("_", " ").capitalize()
-        text += f"- {humanized_key}: {value} \n"
+    try:
+        summary = await pypi_api.get_project_summary(project_name)
+    except httpx.exceptions.HTTPError as exc:
+        if exc.response.status_code == 404:
+            text = f"Could not find project `{project_name}` in the PyPI JSON API."
+        else:
+            raise
+    else:
+        text = "Here is the relevant information from the PyPI JSON API for project {}:\n".format(
+            project_name
+        )
+        for key, value in summary.items():
+            humanized_key = key.replace("_", " ").capitalize()
+            text += f"- {humanized_key}: {value} \n"
 
     uri = f"repos/{settings.GITHUB_REPO_PATH}/issues/{issue['number']}/comments"
     await gh.post(uri, data={"body": text})

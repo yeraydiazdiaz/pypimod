@@ -58,8 +58,7 @@ cached results files to refresh retrieval of statistics.
 ## Future ideas
 
 Some of tasks could be performed in the Warehouse codebase leveraging PyPA's
-credentials. Another option would be to make this a GitHub bot similar to
-Python's [bedevere](https://github.com/python/bedevere).
+credentials.
 
 It is very likely this will evolve beyond the scope of PEP 541 soon,
 for example for requests for upload limits.
