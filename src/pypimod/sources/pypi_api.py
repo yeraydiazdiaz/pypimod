@@ -4,6 +4,8 @@ from urllib.parse import urljoin
 import httpx
 import pendulum
 
+from pypimod import exceptions as exc
+
 PYPI_BASE_URL = "https://pypi.org"
 
 
@@ -47,10 +49,31 @@ def get_project_summary_from_project_data(project_data: dict) -> dict:
         "project_url": project_data["info"]["project_url"],
         "release_url": project_data["info"]["release_url"],
     }
-    summary["last_release_datetime"] = project_data["releases"][summary["version"]][0][
-        "upload_time"
-    ]
-    summary["last_release_elapsed_time"] = pendulum.parse(
-        summary["last_release_datetime"]
-    ).diff_for_humans()
+
+    try:
+        last_release = _get_last_release_info(project_data)
+        summary["last_release_datetime"] = last_release["upload_time"]
+        summary["last_release_elapsed_time"] = pendulum.parse(
+            summary["last_release_datetime"]
+        ).diff_for_humans()
+    except exc.UninstallablePackageError as e:
+        summary["last_release_datetime"] = f"ERROR: {e}"
+
     return summary
+
+
+def _get_last_release_info(project_data: dict) -> dict:
+    """The PyPI API returns the last version number but the releases are
+    as dict of version number to release file information, one dict
+    per release file.
+
+    This function returns the first release file of for the current version
+    or raises UninstallablePackageError.
+    """
+    latest_version = project_data["info"]["version"]
+    try:
+        return project_data["releases"][latest_version][0]
+    except (KeyError, IndexError) as e:
+        raise exc.UninstallablePackageError(
+            "Latest version of package has no releases"
+        ) from e
