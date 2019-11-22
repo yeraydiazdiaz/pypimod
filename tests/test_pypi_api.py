@@ -5,6 +5,7 @@ import pendulum
 import pytest
 
 from pypimod.sources import pypi_api
+from pypimod import exceptions
 
 
 @pytest.mark.asyncio
@@ -48,3 +49,16 @@ async def test_pypi_api_invalid_release(mocker, pypi_api_httpx):
     assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
     assert summary["last_release_datetime"].startswith("ERROR")
     assert "last_release_elapsed_time" not in summary
+
+
+@pytest.mark.asyncio
+async def test_pypi_api_http_error(mocker, pypi_api_httpx):
+    mock_response = mocker.Mock(spec=httpx.Response, status_code=404)
+    mock_response.raise_for_status.side_effect = httpx.exceptions.HTTPError(
+        response=mock_response
+    )
+    mock_client = mocker.Mock(spec=httpx.AsyncClient)
+    mock_client.get.return_value = mock_response
+
+    with pytest.raises(exceptions.PyPIAPIError):
+        await pypi_api.get_project_summary("httpx", client=mock_client)

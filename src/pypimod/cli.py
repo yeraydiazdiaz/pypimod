@@ -4,7 +4,7 @@ import logging
 
 import click
 
-from pypimod import server
+from pypimod import server, exceptions
 from pypimod.sources import pypi_api, bigquery
 from pypimod.config import settings
 
@@ -29,13 +29,16 @@ def cli():
 @click.option("-d", "--days", type=int, default=31, show_default=True)
 def info(project_name: str, stats: bool = False, days: int = 31):
     """Retrieve project data from PyPI and print a summary."""
-    summary = asyncio.run(pypi_api.get_project_summary(project_name))
-    if stats:
-        summary[
-            f"downloads_last_{days}_days"
-        ] = bigquery.get_project_downloads_last_n_days(project_name, days)
-    for k, v in summary.items():
-        click.echo(f"{k}: {v}")
+    try:
+        summary = asyncio.run(pypi_api.get_project_summary(project_name))
+        if stats:
+            summary[
+                f"downloads_last_{days}_days"
+            ] = bigquery.get_project_downloads_last_n_days(project_name, days)
+        for k, v in summary.items():
+            click.echo(f"{k}: {v}")
+    except exceptions.PyPIAPIError as e:
+        click.echo(e, err=True)
 
 
 @cli.command()

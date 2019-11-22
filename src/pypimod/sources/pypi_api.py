@@ -12,7 +12,13 @@ PYPI_BASE_URL = "https://pypi.org"
 async def get_project_summary(
     project_name: str, client: Optional[httpx.AsyncClient] = None
 ):
-    project_data = await get_project_data_by_name(project_name, client)
+    try:
+        project_data = await get_project_data_by_name(project_name, client)
+    except httpx.exceptions.HTTPError as e:
+        raise exc.PyPIAPIError(
+            f"Error retriving data from PyPI API: {e.response.status_code}"
+        ) from e
+
     return get_project_summary_from_project_data(project_data)
 
 
@@ -67,7 +73,7 @@ def _get_last_release_info(project_data: dict) -> dict:
     as dict of version number to release file information, one dict
     per release file.
 
-    This function returns the first release file of for the current version
+    This function returns the first release file of the current version
     or raises UninstallablePackageError.
     """
     latest_version = project_data["info"]["version"]
