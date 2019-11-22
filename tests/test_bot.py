@@ -17,6 +17,18 @@ async def test_server_returns_empty_200_for_ping_event(mocker, app) -> None:
 
 
 @pytest.mark.asyncio
+async def test_server_returns_500_on_exceptions(mocker, app) -> None:
+    client = app.test_client()
+    mocker.patch(
+        "pypimod.server.sansio.Event.from_http", side_effect=Exception("Error")
+    )
+
+    response = await client.post("/")
+
+    assert response.status_code == 500
+
+
+@pytest.mark.asyncio
 async def test_server_adds_pep541_label_on_issue_opened(mocker, app, gh) -> None:
     client = app.test_client()
     data = {
@@ -33,6 +45,23 @@ async def test_server_adds_pep541_label_on_issue_opened(mocker, app, gh) -> None
     assert response.status_code == 200
     assert gh.patch.await_count == 1
     assert gh.patch.await_args_list[0][1]["data"]["labels"] == ["PEP 541"]
+
+
+@pytest.mark.asyncio
+async def test_server_does_nothing_if_issue_title_does_not_match(
+    mocker, app, gh
+) -> None:
+    client = app.test_client()
+    data = {"issue": {"title": "Some other title", "number": 1234}, "action": "opened"}
+    mocker.patch(
+        "pypimod.server.sansio.Event.from_http",
+        return_value=mocker.Mock(event="issues", data=data),
+    )
+
+    response = await client.post("/")
+
+    assert response.status_code == 200
+    assert gh.patch.await_count == 0
 
 
 @pytest.mark.asyncio
