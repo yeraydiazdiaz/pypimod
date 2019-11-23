@@ -5,7 +5,7 @@ import logging
 import click
 
 from pypimod import server, exceptions
-from pypimod.sources import pypi_api, bigquery
+from pypimod.sources import pypi_api, bigquery, pypi_web
 from pypimod.config import settings
 
 
@@ -30,7 +30,7 @@ def cli():
 def info(project_name: str, stats: bool = False, days: int = 31):
     """Retrieve project data from PyPI and print a summary."""
     try:
-        summary = asyncio.run(pypi_api.get_project_summary(project_name))
+        summary = asyncio.run(get_project_info(project_name))
         if stats:
             summary[
                 f"downloads_last_{days}_days"
@@ -64,3 +64,18 @@ def base64_key(key_path: str) -> None:
     with open(key_path, "rb") as fd:
         private_pem = fd.read()
     click.echo(base64.b64encode(private_pem))
+
+
+async def get_project_info(project_name: str) -> dict:
+    results = await asyncio.gather(
+        pypi_api.get_project_summary(project_name),
+        pypi_web.get_pypi_urls(project_name),
+        return_exceptions=True,
+    )
+    project_info: dict = {}
+    for result in results:
+        if isinstance(result, Exception):
+            click.echo(result, err=True)
+        project_info.update(result)
+
+    return project_info

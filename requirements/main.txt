@@ -6,6 +6,7 @@
 #
 aiofiles==0.4.0           # via quart
 attrs==19.2.0             # via environ-config
+beautifulsoup4==4.8.1
 blinker==1.4              # via quart
 cachetools==3.1.1         # via google-auth
 certifi==2019.6.16        # via httpx, requests
@@ -32,6 +33,7 @@ hyperframe==5.2.0         # via h2
 idna==2.8                 # via httpx, requests
 itsdangerous==1.1.0       # via quart
 jinja2==2.10.3            # via quart
+lxml==4.4.1
 markupsafe==1.1.1         # via jinja2
 multidict==4.5.2          # via quart
 pendulum==2.0.4
@@ -50,6 +52,7 @@ rfc3986==1.3.2            # via httpx
 rsa==4.0                  # via google-auth
 six==1.12.0               # via cryptography, google-api-core, google-auth, google-resumable-media, protobuf, python-dateutil
 sortedcontainers==2.1.0   # via quart
+soupsieve==1.9.5          # via beautifulsoup4
 toml==0.10.0              # via hypercorn
 typing-extensions==3.7.4  # via hypercorn
 uritemplate==3.0.0        # via gidgethub

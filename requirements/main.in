@@ -8,3 +8,5 @@ envfiles
 quart
 PyJWT
 cryptography
+beautifulsoup4
+lxml

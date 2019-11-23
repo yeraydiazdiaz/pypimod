@@ -20,7 +20,6 @@ name: lunr
 summary: A Python implementation of Lunr.js
 version: 0.5.5
 author: Yeray Diaz Diaz
-author_email: yeraydiazdiaz@gmail.com
 project_url: https://pypi.org/project/lunr/
 release_url: https://pypi.org/project/lunr/0.5.5/
 last_release_datetime: 2019-04-28T15:25:03

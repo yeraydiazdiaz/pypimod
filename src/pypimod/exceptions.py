@@ -10,3 +10,7 @@ class UninstallablePackageError(PyPIModException):
 
 class PyPIAPIError(PyPIModException):
     pass
+
+
+class PyPIWebError(PyPIModException):
+    pass
