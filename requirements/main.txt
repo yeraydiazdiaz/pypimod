@@ -6,7 +6,7 @@
 #
 aiofiles==0.4.0           # via quart
 attrs==19.2.0             # via environ-config
-beautifulsoup4==4.8.1
+beautifulsoup4==4.8.2
 blinker==1.4              # via quart
 cachetools==3.1.1         # via google-auth
 certifi==2019.6.16        # via httpx, requests
@@ -60,4 +60,4 @@ urllib3==1.25.3           # via requests
 wsproto==0.15.0           # via hypercorn
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==41.6.0        # via google-api-core, protobuf
+# setuptools
