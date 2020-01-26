@@ -33,7 +33,7 @@ hyperframe==5.2.0         # via h2
 idna==2.8                 # via httpx, requests
 itsdangerous==1.1.0       # via quart
 jinja2==2.10.3            # via quart
-lxml==4.4.1
+lxml==4.4.2
 markupsafe==1.1.1         # via jinja2
 multidict==4.5.2          # via quart
 pendulum==2.0.4
@@ -60,4 +60,4 @@ urllib3==1.25.3           # via requests
 wsproto==0.15.0           # via hypercorn
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==41.6.0        # via google-api-core, protobuf
+# setuptools
