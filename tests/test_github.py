@@ -14,13 +14,13 @@ from pypimod.config import settings
 class MockResponse(typing.NamedTuple):
     status_code: int = 200
     headers: dict = {"content-type": "application/json"}
-    body: bytes = b"[]"
+    content: bytes = b"[]"
 
     def to_response(self):
         mock_response = Mock(spec=httpx.Response)
         mock_response.status_code = self.status_code
         mock_response.headers = self.headers
-        mock_response.read = AsyncMock(return_value=self.body)
+        mock_response.content = self.content
         return mock_response
 
 
@@ -50,11 +50,11 @@ class TestInstallationBasedAppGitHubApi:
         responses = [
             MockResponse(status_code=401),
             MockResponse(
-                body=json.dumps(
+                content=json.dumps(
                     [{"account": dict(login=settings.GITHUB_OWNER), "id": 1234}]
                 ).encode()
             ),
-            MockResponse(body=b'{"token": "some_token"}'),
+            MockResponse(content=b'{"token": "some_token"}'),
             MockResponse(),
         ]
         mock_client = client_with_responses(responses)
