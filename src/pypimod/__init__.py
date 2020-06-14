@@ -10,4 +10,4 @@ __author__ = "Yeray Díaz Díaz"
 __email__ = "yeraydiazdiaz@gmail.com"
 
 __license__ = "Apache 2.0"
-__copyright__ = "Copyright (c) 2019 Yeray Díaz Díaz"
+__copyright__ = "Copyright (c) 2020 Yeray Díaz Díaz"
