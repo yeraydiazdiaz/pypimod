@@ -31,6 +31,6 @@ To retrieve stats from BigQuery you will need to setup a Google Cloud project
 and generate and download service account JSON. The service account must
 have the "BigQuery Job User IAM role".
 
-`pypimod` will cache results of queries in the `dev` directory to avoid
+`pypimod` will cache results of queries in the `.cache` directory to avoid
 incurring in excessive costs, you will need to manually remove these
 cached results files to refresh retrieval of statistics.

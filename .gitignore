@@ -4,6 +4,8 @@
 **/__pycache__
 .coverage
 env/local.env
+.envrc
+.cache
 
 dev/
 .vscode

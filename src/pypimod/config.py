@@ -5,7 +5,7 @@ import environ
 import envfiles
 
 HERE = Path(__file__).absolute()
-DEV_PATH = HERE.parents[2] / "dev"
+CACHE_PATH = HERE.parents[2] / ".cache"
 
 
 @environ.config(prefix="PPM")
@@ -15,7 +15,7 @@ class Config:
     GC_PROJECT: str = environ.var()
     BQ_PYPI_DOWNLOADS_TABLE: str = environ.var("the-psf.pypi.downloads*")
     CACHE_RESULTS: bool = environ.bool_var(True)
-    CACHED_RESULTS_PATH: str = environ.var(DEV_PATH / "cached_bq_results.json")
+    CACHED_RESULTS_PATH: str = environ.var(CACHE_PATH / "cached_bq_results.json")
 
     LOGGING_LEVEL: str = environ.var("INFO")
 
