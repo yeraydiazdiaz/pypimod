@@ -16,44 +16,37 @@ async def test_pypi_api(mocker, pypi_api_httpx):
     mock_client.get.return_value = mock_response
 
     summary = await pypi_api.get_project_summary("httpx", client=mock_client)
-
+    assert set(summary.keys()) == {
+        "name",
+        "summary",
+        "version",
+        "author",
+        "author_email",
+        "project_urls",
+        "last_release_datetime",
+    }
     assert summary["name"] == "httpx"
     assert summary["summary"] == pypi_api_httpx["info"]["summary"]
     assert summary["version"] == pypi_api_httpx["info"]["version"]
     assert summary["author"] == pypi_api_httpx["info"]["author"]
-    assert summary["project_url"] == pypi_api_httpx["info"]["project_url"]
-    assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
-    assert summary["last_release_datetime"] == "2019-10-10T14:20:49"
-    assert (
-        summary["last_release_elapsed_time"]
-        == pendulum.parse(summary["last_release_datetime"]).diff_for_humans()
-    )
+    assert summary["author_email"] == pypi_api_httpx["info"]["author_email"]
+    assert summary["project_urls"] == pypi_api_httpx["info"]["project_urls"]
+    assert summary["last_release_datetime"] == pendulum.parse("2019-10-10T14:20:49")
 
 
 @pytest.mark.asyncio
-async def test_pypi_api_creates_client(mocker, pypi_api_httpx):
+async def test_pypi_api_creates_client_if_none_is_passed(mocker, pypi_api_httpx):
     mock_response = mocker.Mock(spec=httpx.Response)
     mock_response.json.return_value = pypi_api_httpx
     mock_client = mocker.Mock(spec=httpx.AsyncClient)
     mock_client.get.return_value = mock_response
-    mocker.patch(
-        "pypimod.sources.pypi_api.httpx.AsyncClient.__aenter__",
-        return_value=mock_client,
+    mock_aenter = mocker.patch.object(
+        httpx.AsyncClient, "__aenter__", return_value=mock_client,
     )
 
-    summary = await pypi_api.get_project_summary("httpx")
+    _ = await pypi_api.get_project_summary("httpx")
 
-    assert summary["name"] == "httpx"
-    assert summary["summary"] == pypi_api_httpx["info"]["summary"]
-    assert summary["version"] == pypi_api_httpx["info"]["version"]
-    assert summary["author"] == pypi_api_httpx["info"]["author"]
-    assert summary["project_url"] == pypi_api_httpx["info"]["project_url"]
-    assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
-    assert summary["last_release_datetime"] == "2019-10-10T14:20:49"
-    assert (
-        summary["last_release_elapsed_time"]
-        == pendulum.parse(summary["last_release_datetime"]).diff_for_humans()
-    )
+    assert mock_aenter.called
 
 
 @pytest.mark.asyncio
@@ -67,14 +60,7 @@ async def test_pypi_api_invalid_release(mocker, pypi_api_httpx):
 
     summary = await pypi_api.get_project_summary("httpx", client=mock_client)
 
-    assert summary["name"] == "httpx"
-    assert summary["summary"] == pypi_api_httpx["info"]["summary"]
-    assert summary["version"] == pypi_api_httpx["info"]["version"]
-    assert summary["author"] == pypi_api_httpx["info"]["author"]
-    assert summary["project_url"] == pypi_api_httpx["info"]["project_url"]
-    assert summary["release_url"] == pypi_api_httpx["info"]["release_url"]
-    assert summary["last_release_datetime"].startswith("ERROR")
-    assert "last_release_elapsed_time" not in summary
+    assert summary["last_release_datetime"] is None
 
 
 @pytest.mark.asyncio

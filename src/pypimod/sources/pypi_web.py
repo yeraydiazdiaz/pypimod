@@ -1,5 +1,5 @@
 from urllib.parse import urljoin
-from typing import List, Tuple
+from typing import List
 
 from bs4 import BeautifulSoup
 import httpx
