@@ -1,3 +1,5 @@
+import asyncio
+from concurrent import futures
 from collections import OrderedDict
 from typing import Dict
 
@@ -25,6 +27,14 @@ GROUP BY project
 """
 
 
+async def get_project_downloads_last_n_days(project_name: str, n_days: int) -> int:
+    loop = asyncio.get_event_loop()
+    with futures.ThreadPoolExecutor() as executor:
+        return await loop.run_in_executor(
+            executor, get_project_downloads_last_n_days_sync, project_name, n_days
+        )
+
+
 def get_bigquery_client() -> bigquery.Client:
     credentials = settings.GC_CREDENTIALS
     project = settings.GC_PROJECT
@@ -32,7 +42,7 @@ def get_bigquery_client() -> bigquery.Client:
     return bigquery.Client.from_service_account_json(credentials, project=project)
 
 
-def get_project_downloads_last_n_days(project_name: str, n_days: int) -> int:
+def get_project_downloads_last_n_days_sync(project_name: str, n_days: int) -> int:
     end_date = pendulum.today().subtract(days=1)
     start_date = end_date.subtract(days=n_days)
 

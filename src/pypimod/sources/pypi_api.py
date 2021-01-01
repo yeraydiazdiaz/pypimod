@@ -1,17 +1,19 @@
-from typing import Optional
 from urllib.parse import urljoin
+from typing import Optional, Dict, Any
 
 import httpx
 import pendulum
 
 from pypimod import exceptions as exc
+from pypimod import logging, constants
 
-PYPI_BASE_URL = "https://pypi.org"
+logger = logging.get_logger(__name__)
 
 
 async def get_project_summary(
     project_name: str, client: Optional[httpx.AsyncClient] = None
-):
+) -> Dict[str, str]:
+    """Fetches the project's information from the PyPI API."""
     try:
         project_data = await get_project_data_by_name(project_name, client)
     except httpx.exceptions.HTTPError as e:
@@ -25,7 +27,7 @@ async def get_project_summary(
 # TODO: add retries
 async def get_project_data_by_name(
     project_name: str, client: Optional[httpx.AsyncClient] = None
-) -> dict:
+) -> Dict[str, Dict[str, Any]]:
     if not client:
         async with httpx.AsyncClient() as client:
             return await _get_pypi_api_project_data(project_name, client)
@@ -35,9 +37,9 @@ async def get_project_data_by_name(
 
 async def _get_pypi_api_project_data(
     project_name: str, client: httpx.AsyncClient
-) -> dict:
+) -> Dict[str, Dict[str, Any]]:
     response = await client.get(
-        urljoin(PYPI_BASE_URL, "/".join(("pypi", project_name, "json")))
+        urljoin(constants.BASE_PYPI_URL, "/".join(("pypi", project_name, "json")))
     )
     # TODO: handle connection errors
     response.raise_for_status()
@@ -45,25 +47,24 @@ async def _get_pypi_api_project_data(
     return response.json()
 
 
-def get_project_summary_from_project_data(project_data: dict) -> dict:
+def get_project_summary_from_project_data(
+    project_data: Dict[str, Dict[str, Any]]
+) -> Dict[str, str]:
     """Returns a summary of project data from the PyPI API for a project."""
     summary = {
         "name": project_data["info"]["name"],
         "summary": project_data["info"]["summary"],
         "version": project_data["info"]["version"],
         "author": project_data["info"]["author"],
-        "project_url": project_data["info"]["project_url"],
-        "release_url": project_data["info"]["release_url"],
+        "author_email": project_data["info"]["author_email"],
+        "project_urls": project_data["info"]["project_urls"],
     }
 
     try:
         last_release = _get_last_release_info(project_data)
-        summary["last_release_datetime"] = last_release["upload_time"]
-        summary["last_release_elapsed_time"] = pendulum.parse(
-            summary["last_release_datetime"]
-        ).diff_for_humans()
-    except exc.UninstallablePackageError as e:
-        summary["last_release_datetime"] = f"ERROR: {e}"
+        summary["last_release_datetime"] = pendulum.parse(last_release["upload_time"])
+    except exc.UninstallablePackageError:
+        summary["last_release_datetime"] = None
 
     return summary
 

@@ -14,3 +14,7 @@ class PyPIAPIError(PyPIModException):
 
 class PyPIWebError(PyPIModException):
     pass
+
+
+class InvalidArgument(PyPIModException, ValueError):
+    pass
